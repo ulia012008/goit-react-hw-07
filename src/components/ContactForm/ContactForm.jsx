@@ -1,56 +1,61 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addContact } from "../../redux/contactsSlice";
+import { addContact } from "../../redux/contactsOps";
+import { selectContacts } from "../../redux/contactsSlice";
+import styles from "./ContactForm.module.css";
 
-import css from "./ContactForm.module.css";
-
-export default function ContactForm() {
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
-  const contacts = useSelector((state) => state.contacts.items);
+const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isExist = contacts.some(
-      (contact) => contact.name.toLowerCase() === name.toLowerCase()
-    );
-    if (isExist) {
+
+    if (
+      contacts.find(
+        (contact) => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
       alert(`${name} is already in contacts.`);
       return;
     }
 
-    dispatch(addContact({ name, number }));
+    dispatch(addContact({ name, phone }));
     setName("");
-    setNumber("");
+    setPhone("");
   };
 
   return (
-    <form className={css.form} onSubmit={handleSubmit}>
-      <label className={css.label}>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <label className={styles.label}>
         Name
         <input
-          className={css.input}
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          className={styles.input}
         />
       </label>
-      <label className={css.label}>
-        Number
+      <label className={styles.label}>
+        Phone
         <input
-          className={css.input}
           type="tel"
-          value={number}
-          pattern={"\\+?[0-9]{1,3}?[0-9]{1,14}(?:x.+)?"}
-          onChange={(e) => setNumber(e.target.value)}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
           required
+          className={styles.input}
+          pattern={"\\+?[0-9]{1,3}?[0-9]{1,14}(?:x.+)?"}
         />
       </label>
-      <button className={css.button} type="submit">
+      <button type="submit" className={styles.button}>
         Add contact
       </button>
     </form>
   );
-}
+};
+
+export default ContactForm;

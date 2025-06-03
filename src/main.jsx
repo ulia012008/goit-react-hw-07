@@ -1,16 +1,15 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
 import { Provider } from "react-redux";
-import { store, persistor } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
+import { store } from "./redux/store"; // путь к store
+import App from "./App";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+import ReactDOM from "react-dom/client";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
+      <App />
     </Provider>
   </React.StrictMode>
 );
